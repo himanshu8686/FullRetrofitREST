@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.fullretrofitrest.domain.Comment;
 import com.fullretrofitrest.domain.Post;
 import com.fullretrofitrest.jsonPlaceholder.JsonPlaceholderApi;
 
@@ -32,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
         tv_result= findViewById(R.id.tv_result);
         progressBar_horizontal=findViewById(R.id.progressBar_horizontal);
 
-
-
     }
 
     @Override
@@ -46,7 +45,49 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         jsonPlaceholderApi=retrofit.create(JsonPlaceholderApi.class);
 
-        makeGetRequestForAllPosts();
+        //makeGetRequestForAllPosts();
+
+        getCommentsByPostId();
+    }
+
+    /**
+     * this method is used for making GET request to fetch all the comments json objects
+     * and use
+     * @GET("posts/{id}/comments")
+     * Call<List<Comment>> getComments(@Path("id") int postId);
+     */
+    private void getCommentsByPostId()
+    {
+        Call<List<Comment>> call=jsonPlaceholderApi.getComments(3);
+        call.enqueue(new Callback<List<Comment>>() {
+            @Override
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response)
+            {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+                List<Comment> comments=response.body();
+                for (Comment comment:   comments)
+                {
+                    String content="";
+                    content=content+"ID : "+comment.getId() +"\n";
+                    content=content+"Post ID : "+comment.getPostId() +"\n";
+                    content=content+"Name : "+comment.getName() +"\n";
+                    content=content+"Email : "+comment.getEmail() +"\n";
+                    content=content+"Text : "+comment.getText() +"\n\n";
+
+                    tv_result.append(content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
     }
 
     /**
