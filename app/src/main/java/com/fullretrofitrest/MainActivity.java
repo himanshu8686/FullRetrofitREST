@@ -47,8 +47,51 @@ public class MainActivity extends AppCompatActivity {
 
         //makeGetRequestForAllPosts();
 
-        getCommentsByPostId();
+        //getCommentsByPostId();
+
+        getAllPostsByUserIdByUrlRewriting();
     }
+
+    /**
+     * this method uses query parameter for filter out
+     * and uses
+     *
+     */
+    private void getAllPostsByUserIdByUrlRewriting()
+    {
+        Call<List<Post>> call= jsonPlaceholderApi.getAllPostsByUserId(4);
+        call.enqueue(new Callback<List<Post>>()
+        {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response)
+            {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+
+                List<Post> posts=response.body();
+                for (Post post:posts)
+                {
+                    String content="";
+                    content=content+"ID : "+post.getId() +"\n";
+                    content=content+"User ID : "+post.getUserId() +"\n";
+                    content=content+"Title : "+post.getTitle() +"\n";
+                    content=content+"Text : "+post.getText() +"\n\n";
+
+                    tv_result.append(content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
+    }
+
 
     /**
      * this method is used for making GET request to fetch all the comments json objects
