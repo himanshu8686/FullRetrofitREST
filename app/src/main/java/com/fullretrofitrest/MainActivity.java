@@ -49,7 +49,49 @@ public class MainActivity extends AppCompatActivity {
 
         //getCommentsByPostId();
 
-        getAllPostsByUserIdByUrlRewriting();
+        // getAllPostsByUserIdByUrlRewriting();
+
+        getAllPostsByMultipleQueryParameter();
+    }
+
+    /**
+     * This method is to fetch get all posts by having multiple query parameters
+     * in our case an array of Integer of userId which is sorted by id and order descending way
+     */
+    private void getAllPostsByMultipleQueryParameter()
+    {
+        Call<List<Post>> call= jsonPlaceholderApi.getAllPostByUserIdAndSortById(new Integer[]{2,4,6},"id","desc");
+        call.enqueue(new Callback<List<Post>>()
+        {
+            @Override
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response)
+            {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+
+                List<Post> posts=response.body();
+                for (Post post:posts)
+                {
+                    String content="";
+                    content=content+"ID : "+post.getId() +"\n";
+                    content=content+"User ID : "+post.getUserId() +"\n";
+                    content=content+"Title : "+post.getTitle() +"\n";
+                    content=content+"Text : "+post.getText() +"\n\n";
+
+                    tv_result.append(content);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Post>> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
+
     }
 
     /**

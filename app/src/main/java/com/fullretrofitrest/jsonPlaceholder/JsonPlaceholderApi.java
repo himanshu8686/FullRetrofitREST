@@ -38,4 +38,19 @@ public interface JsonPlaceholderApi
      */
     @GET("posts")
     Call<List<Post>> getAllPostsByUserId(@Query("userId") int userId);
+
+    /**
+     * This method is used for get All posts by
+     * @param userId and
+     * @param sort is used to sort data based on json key
+     * @param order is either desc or asc
+     * @return
+     */
+    @GET("posts")
+    Call<List<Post>> getAllPostByUserIdAndSortById(
+            @Query("userId") Integer[] userId,
+            @Query("_sort") String sort,
+            @Query("_order") String order
+    );
+
 }
