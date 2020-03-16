@@ -7,6 +7,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -101,4 +102,12 @@ public interface JsonPlaceholderApi
      */
     @PATCH("posts/{id}")
     Call<Post> patchPost(@Path("id") int id,@Body Post post);
+
+    /**
+     * In this method we don't want body so we set it to Void the Call<Void>
+     * @param id to be deleted
+     * @return void i.e empty body
+     */
+    @DELETE("posts/{id}")
+    Call<Void> deletePost(@Path("id") int id);
 }

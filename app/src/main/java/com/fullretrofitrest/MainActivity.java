@@ -59,7 +59,29 @@ public class MainActivity extends AppCompatActivity {
 
         // updatePost();
 
-        updatePostWithPatch();
+        //updatePostWithPatch();
+
+        deletePost();
+    }
+
+    /**
+     *
+     */
+    private void deletePost()
+    {
+        Call<Void> call=jsonPlaceholderApi.deletePost(4);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                progressBar_horizontal.setVisibility(View.GONE);
+                tv_result.setText("Code: "+response.code()+"\n"+" post deleted successfully");
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
     }
 
     /**
