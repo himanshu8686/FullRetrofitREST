@@ -10,7 +10,9 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -82,4 +84,21 @@ public interface JsonPlaceholderApi
             @Field("body") String text
             );
 
+    /**
+     * In this method PUT request completely replaces or updated the fields in json object
+     * @param id to which object is going to be updated
+     * @param post object sent into the body of the Request
+     * @return async call to create the json object
+     */
+    @PUT("posts/{id}")
+    Call<Post> putPost(@Path("id") int id,@Body Post post);
+
+    /**
+     * In this method PATCH is only update the value which is going to be set in the fields
+     * @param id to which object is going to be updated
+     * @param post object sent into the body of the Request
+     * @return
+     */
+    @PATCH("posts/{id}")
+    Call<Post> patchPost(@Path("id") int id,@Body Post post);
 }

@@ -55,7 +55,85 @@ public class MainActivity extends AppCompatActivity {
 
         //createPost();
 
-        createPostWithFromUrlEncoded();
+        // createPostWithFromUrlEncoded();
+
+        // updatePost();
+
+        updatePostWithPatch();
+    }
+
+    /**
+     *  This method only updates the fields that we provided and for fields that we setted null takes default value
+     */
+    private void updatePostWithPatch()
+    {
+        Post post=new Post(12,null,"New Text");
+        Call<Post> call=jsonPlaceholderApi.patchPost(5,post);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+
+                Post postResponse=response.body();
+
+                String content="";
+                content=content+"Response Code from server: "+response.code() +"\n";
+                content=content+"ID : "+postResponse.getId() +"\n";
+                content=content+"User ID : "+postResponse.getUserId() +"\n";
+                content=content+"Title : "+postResponse.getTitle() +"\n";
+                content=content+"Text : "+postResponse.getText() +"\n\n";
+
+                tv_result.setText(content);
+
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
+    }
+
+    /**
+     * This method completely updates the existing object according to the given id in putPost(<id>,Post post)
+     */
+    private void updatePost()
+    {
+        Post post=new Post(12,null,"New Text");
+        Call<Post> call=jsonPlaceholderApi.putPost(5,post);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response) {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+
+                Post postResponse=response.body();
+
+                String content="";
+                content=content+"Response Code from server: "+response.code() +"\n";
+                content=content+"ID : "+postResponse.getId() +"\n";
+                content=content+"User ID : "+postResponse.getUserId() +"\n";
+                content=content+"Title : "+postResponse.getTitle() +"\n";
+                content=content+"Text : "+postResponse.getText() +"\n\n";
+
+                tv_result.setText(content);
+
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
     }
 
     /**
