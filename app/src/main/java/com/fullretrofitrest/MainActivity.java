@@ -1,6 +1,9 @@
 package com.fullretrofitrest;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -16,7 +19,9 @@ import com.fullretrofitrest.domain.Comment;
 import com.fullretrofitrest.domain.Post;
 import com.fullretrofitrest.jsonPlaceholder.JsonPlaceholderApi;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,10 +44,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar_horizontal.setVisibility(View.VISIBLE);
+
+        HttpLoggingInterceptor httpLoggingInterceptor=new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient okHttpClient=new OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .build();
+
         Retrofit retrofit=new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
+
         jsonPlaceholderApi=retrofit.create(JsonPlaceholderApi.class);
 
         //makeGetRequestForAllPosts();
@@ -57,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
         // createPostWithFromUrlEncoded();
 
-        // updatePost();
+         updatePostWithPut();
 
-        //updatePostWithPatch();
+        // updatePostWithPatch();
 
-        deletePost();
+        //deletePost();
     }
 
     /**
@@ -124,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * This method completely updates the existing object according to the given id in putPost(<id>,Post post)
      */
-    private void updatePost()
+    private void updatePostWithPut()
     {
         Post post=new Post(12,null,"New Text");
         Call<Post> call=jsonPlaceholderApi.putPost(5,post);
