@@ -6,7 +6,9 @@ import com.fullretrofitrest.domain.Post;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -52,5 +54,14 @@ public interface JsonPlaceholderApi
             @Query("_sort") String sort,
             @Query("_order") String order
     );
+
+
+    /**
+     * This method is our POST reqest method used for creating the json object
+     * @param post is embedded into the body of the Request
+     * @return async call to create the json object
+     */
+    @POST("posts")
+    Call<Post> createPost(@Body Post post);
 
 }

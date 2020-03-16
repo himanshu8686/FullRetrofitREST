@@ -8,9 +8,15 @@ public class Post
 
     private int userId;
 
-    private int id;
+    private Integer id;
 
     private String title;
+
+    public Post(int userId, String title, String text) {
+        this.userId = userId;
+        this.title = title;
+        this.text = text;
+    }
 
     @SerializedName("body")
     private String text;

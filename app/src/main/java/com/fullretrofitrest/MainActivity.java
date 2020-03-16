@@ -51,7 +51,47 @@ public class MainActivity extends AppCompatActivity {
 
         // getAllPostsByUserIdByUrlRewriting();
 
-        getAllPostsByMultipleQueryParameter();
+        //getAllPostsByMultipleQueryParameter();
+
+        createPost();
+    }
+
+    /**
+     * This createPost() method will create the post and from the response we retrieve the values and put it into our text view
+     *
+     */
+    private void createPost()
+    {
+        Post post=new Post(23,"Himanshu","he is genius!");
+        Call<Post> call=jsonPlaceholderApi.createPost(post);
+        call.enqueue(new Callback<Post>() {
+            @Override
+            public void onResponse(Call<Post> call, Response<Post> response)
+            {
+                progressBar_horizontal.setVisibility(View.GONE);
+                if (!response.isSuccessful())
+                {
+                    tv_result.setText("Code:"+response.code());
+                    return;
+                }
+
+                Post postResponse=response.body();
+
+                String content="";
+                content=content+"Response Code from server: "+response.code() +"\n";
+                content=content+"ID : "+postResponse.getId() +"\n";
+                content=content+"User ID : "+postResponse.getUserId() +"\n";
+                content=content+"Title : "+postResponse.getTitle() +"\n";
+                content=content+"Text : "+postResponse.getText() +"\n\n";
+
+                tv_result.setText(content);
+            }
+
+            @Override
+            public void onFailure(Call<Post> call, Throwable t) {
+                tv_result.setText(t.getMessage());
+            }
+        });
     }
 
     /**
@@ -97,7 +137,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      * this method uses query parameter for filter out
      * and uses
-     *
+     *  @GET("posts")
+     *     Call<List < Post>> getAllPostByUserIdAndSortById(
+     *             @Query("userId") Integer[] userId,
+     *             @Query("_sort") String sort,
+     *             @Query("_order") String order
+     *     );
      */
     private void getAllPostsByUserIdByUrlRewriting()
     {
