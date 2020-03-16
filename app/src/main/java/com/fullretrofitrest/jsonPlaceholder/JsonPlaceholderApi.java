@@ -7,6 +7,8 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -63,5 +65,21 @@ public interface JsonPlaceholderApi
      */
     @POST("posts")
     Call<Post> createPost(@Body Post post);
+
+    /**
+     * This method is another way of creating POST request
+     * It is suitable for only simple key-value pair not for complex nested values
+     * @param userId is json key
+     * @param title is json key
+     * @param text is json key
+     * @return async call to create the json object
+     */
+    @FormUrlEncoded
+    @POST("posts")
+   Call<Post> createPostByFormUrlEncoded(
+            @Field("userId") int userId,
+            @Field("title") String title,
+            @Field("body") String text
+            );
 
 }
